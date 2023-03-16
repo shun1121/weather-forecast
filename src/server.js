@@ -12,3 +12,10 @@ const resolvers = {
     info: () => 'News',
   }
 }
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+})
+
+server.listen().then(({ url }) => console.log(`${url}でサーバ起動`))
