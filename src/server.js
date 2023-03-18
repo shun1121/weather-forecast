@@ -16,17 +16,35 @@ const typeDefs = gql`
     feed: [Link]!
   }
 
+  type Mutation {
+    post(url: String!, description: String!): Link!
+  }
+
   type Link {
     id: ID!
     description: String!
     url: String!
   }
 `
+
 //リゾルバ関数 型に情報を入れる
 const resolvers = {
   Query: {
     info: () => 'News',
     feed: () => links,
+  },
+
+  Mutation: {
+    post: (parent, args) => {
+      let idCount = args.length
+      const link = {
+        id: `link-${idCount++}`,
+        description: args.description,
+        url: args.url
+      }
+      links.push(link)
+      return link
+    }
   }
 }
 
