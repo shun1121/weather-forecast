@@ -18,7 +18,32 @@ async function signup(parent, args, context) {
   })
   // userのidを使ってランダム文字列(トークン)を作成
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
-  
+
+  return {
+    token,
+    user
+  }
+}
+
+// ユーザログイン
+async function login(parent, args, context) {
+  // prismaのfindUniqueメソッドを使用
+  const user = await context.prisma.user.findUnique({
+    where: { email: args.email }
+  })
+  if(!user) {
+    throw new Error('No such user exists')
+  }
+
+  // パスワードの比較
+  const valid = await bcrypt.compare(args.password, user.password)
+  if(!valid) {
+    throw new Error('Password does not match')
+  }
+
+  // パスワードが正しい時
+  const token = jwt.sign({ userId: user.id }, APP_SECRET)
+
   return {
     token,
     user
