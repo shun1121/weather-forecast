@@ -16,6 +16,7 @@ const resolvers = {
   },
 
   Mutation: {
+    // schema.graphqlにあるtype Mutationの中身と対応している。
     post: (parent, args, context) => {
       const newLink = context.prisma.link.create({
         data: {
