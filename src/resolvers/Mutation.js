@@ -55,7 +55,9 @@ async function post(parent, args, context) {
   return await context.prisma.link.create({
     data: {
       url: args.url,
-      description: args.description
+      description: args.description,
+      // postedBy: userId ← userIdどこから取得するの？
+      
     }
   })
 }
