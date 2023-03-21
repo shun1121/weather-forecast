@@ -1,7 +1,7 @@
 const {ApolloServer,gql} = require('apollo-server')
 const fs = require('fs')
 const path = require('path') //どこにschema.graphqlがあるか
-const getUserId = require('./utils')
+const {getUserId} = require('./utils')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 const Link = require('./resolvers/Link')
