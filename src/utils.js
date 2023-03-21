@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 
 // 署名(ランダム文字列)するための秘密鍵的なもの
-APP_SECRET = 'Graphql'
+APP_SECRET = 'Graphql-is-awesome'
 
 // トークンを復号するための関数
 function getTokenPayload(token) {

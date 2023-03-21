@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const APP_SECRET = require('../utils')
+const { APP_SECRET } = require('../utils')
 
 // ユーザの新規登録のリゾルバ
 async function signup(parent, args, context) {
