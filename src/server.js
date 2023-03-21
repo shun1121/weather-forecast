@@ -2,32 +2,20 @@ const {ApolloServer,gql} = require('apollo-server')
 const fs = require('fs')
 const path = require('path') //どこにschema.graphqlがあるか
 const getUserId = require('./utils')
+const Query = require('./resolvers/Query')
+const Mutation = require('./resolvers/Mutation')
+const Link = require('./resolvers/Link')
+const User = require('./resolvers/User')
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 //リゾルバ関数 型に情報を入れる
 const resolvers = {
-  Query: {
-    info: () => 'News',
-    feed: async (parent, args, context) => {
-      // linkはモデル名
-      return context.prisma.link.findMany()
-    },
-  },
-
-  Mutation: {
-    // schema.graphqlにあるtype Mutationの中身と対応している。
-    post: (parent, args, context) => {
-      const newLink = context.prisma.link.create({
-        data: {
-          url: args.url,
-          description: args.description
-        }
-      })
-      return newLink
-    }
-  }
+  Query,
+  Mutation,
+  Link,
+  User,
 }
 
 const server = new ApolloServer({
