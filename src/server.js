@@ -1,6 +1,7 @@
 const {ApolloServer,gql} = require('apollo-server')
 const fs = require('fs')
 const path = require('path') //どこにschema.graphqlがあるか
+const getUserId = require('./utils')
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -33,9 +34,13 @@ const server = new ApolloServer({
   //__dirnameは現在のディレクトリ、つまりsrc/, その配下のschema.graphql
   typeDefs: fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf-8'),
   resolvers,
-  // 今回はresolver内でprismaが使えるようにする。データの取得など可能になる。
-  context: {
-    prisma,
+  // contextはどのresolverでも指定した値を使えるようにするためのもの、reqはplaygroundで再生ボタンを押したときに送るリクエスト情報
+  context: ({ req }) => {
+    return {
+      ...req,
+      prisma,
+      userId: req && req.headers.authorization ? getUserId(req) : null,
+    }
   }
 })
 
