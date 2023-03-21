@@ -1,8 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
-// 署名(ランダム文字列)するための秘密鍵的なもの
-APP_SECRET = 'Graphql'
+const APP_SECRET = require('../utils')
 
 // ユーザの新規登録のリゾルバ
 async function signup(parent, args, context) {
@@ -57,7 +55,7 @@ async function post(parent, args, context) {
       url: args.url,
       description: args.description,
       // postedBy: userId ← userIdどこから取得するの？
-      
+
     }
   })
 }
