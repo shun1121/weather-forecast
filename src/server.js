@@ -1,19 +1,27 @@
 const {ApolloServer,gql} = require('apollo-server')
 const fs = require('fs')
 const path = require('path') //どこにschema.graphqlがあるか
+
 const {getUserId} = require('./utils')
+const { PrismaClient } = require('@prisma/client')
+
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 const Link = require('./resolvers/Link')
 const User = require('./resolvers/User')
+const Subscription = require('./resolvers/Subscription')
 
-const { PrismaClient } = require('@prisma/client')
+// サブスクリプションの実装、 Publisher(送信者)=Subscriber(受信者)
+const {PubSub} = require('apollo-server')
+
 const prisma = new PrismaClient()
+const pubsub = new PubSub()
 
 //リゾルバ関数 型に情報を入れる
 const resolvers = {
   Query,
   Mutation,
+  Subscription,
   Link,
   User,
 }
@@ -27,6 +35,7 @@ const server = new ApolloServer({
     return {
       ...req,
       prisma,
+      pubsub,
       userId: req && req.headers.authorization ? getUserId(req) : null,
     }
   }

@@ -52,7 +52,7 @@ async function login(parent, args, context) {
 async function post(parent, args, context) {
   const { userId } = context
 
-  return await context.prisma.link.create({
+  const newLink = await context.prisma.link.create({
     data: {
       url: args.url,
       description: args.description,
@@ -60,6 +60,9 @@ async function post(parent, args, context) {
       postedBy: {connect: {id: userId}}
     }
   })
+  // 送信(受取手のNEW_LINKにnewLinkを送信)
+  context.pubsub.publish('NEW_LINK', newLink)
+  return newLink
 }
 
 module.exports = {
