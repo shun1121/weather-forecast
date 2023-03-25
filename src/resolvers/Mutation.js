@@ -65,8 +65,39 @@ async function post(parent, args, context) {
   return newLink
 }
 
+async function vote(parent, args, context) {
+  const userId = context.userId
+
+  const vote = context.prisma.vote.findUnique({
+    where: {
+      linkId_userId: {
+        linkId: Number(args.linkId),
+        userId: userId,
+      }
+    }
+  })
+
+  // 2回投票を防ぐ
+  if(Boolean(vote)) {
+    throw new Error(`already voted: ${args.linkId}`)
+  }
+
+  // 投票する
+  const newVote = context.prisma.vote.create({
+    data: {
+      // schema.prismaのスキーマ設定でvoteはuserとの関係があるからconnectで繋げる。contextから取ってきた認証idを使う
+      user: {connect: { id: userId }},
+      link: {connect: { id: Number(args.linkId)}}
+    },
+  })
+  // 送信
+  context.pubsub.publish("NEW_VOTE", newVote)
+  return newVote
+}
+
 module.exports = {
   signup,
   login,
   post,
+  vote,
 }
