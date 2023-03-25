@@ -81,10 +81,23 @@ async function vote(parent, args, context) {
   if(Boolean(vote)) {
     throw new Error(`already voted: ${args.linkId}`)
   }
+
+  // 投票する
+  const newVote = context.prisma.vote.create({
+    data: {
+      // schema.prismaのスキーマ設定でvoteはuserとの関係があるからconnectで繋げる。contextから取ってきた認証idを使う
+      user: {connect: { id: userId }},
+      link: {connect: { id: Number(args.linkId)}}
+    },
+  })
+  // 送信
+  context.pubsub.publish("NEW_VOTE", newVote)
+  return newVote
 }
 
 module.exports = {
   signup,
   login,
   post,
+  vote,
 }
