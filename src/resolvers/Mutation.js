@@ -65,6 +65,24 @@ async function post(parent, args, context) {
   return newLink
 }
 
+async function vote(parent, args, context) {
+  const userId = context.userId
+
+  const vote = context.prisma.vote.findUnique({
+    where: {
+      linkId_userId: {
+        linkId: Number(args.linkId),
+        userId: userId,
+      }
+    }
+  })
+
+  // 2回投票を防ぐ
+  if(Boolean(vote)) {
+    throw new Error(`already voted: ${args.linkId}`)
+  }
+}
+
 module.exports = {
   signup,
   login,
