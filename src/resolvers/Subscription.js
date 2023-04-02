@@ -1,5 +1,4 @@
 function newLinkSubscribe(parent, args, context) {
-  // 非同期で何度も繰り返す。引数はトリガーの名前。sub側(サーバ側)の設定
   return context.pubsub.asyncIterator('NEW_LINK')
 }
 
@@ -16,7 +15,6 @@ function newVoteSubscribe(parent, args, context) {
 
 const newVote = {
   subscribe: newVoteSubscribe,
-  // 送信側から送られてきたデータをpayloadで受け取る
   resolve: (payload) => {
     return payload
   }

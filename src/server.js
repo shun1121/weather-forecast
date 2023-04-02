@@ -1,6 +1,6 @@
 const {ApolloServer} = require('apollo-server')
 const fs = require('fs')
-const path = require('path') //どこにschema.graphqlがあるか
+const path = require('path')
 
 const {getUserId} = require('./utils')
 const { PrismaClient } = require('@prisma/client')
@@ -12,13 +12,11 @@ const User = require('./resolvers/User')
 const Vote = require('./resolvers/Vote')
 const Subscription = require('./resolvers/Subscription')
 
-// サブスクリプションの実装、 Publisher(送信者)=Subscriber(受信者)
 const {PubSub} = require('apollo-server')
 
 const prisma = new PrismaClient()
 const pubsub = new PubSub()
 
-//リゾルバ関数 型に情報を入れる
 const resolvers = {
   Query,
   Mutation,
@@ -29,10 +27,8 @@ const resolvers = {
 }
 
 const server = new ApolloServer({
-  //__dirnameは現在のディレクトリ、つまりsrc/, その配下のschema.graphql
   typeDefs: fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf-8'),
   resolvers,
-  // contextはどのresolverでも指定した値を使えるようにするためのもの、reqはplaygroundで再生ボタンを押したときに送るリクエスト情報
   context: ({ req }) => {
     return {
       ...req,

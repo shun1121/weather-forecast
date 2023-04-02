@@ -7,16 +7,14 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db" // migration後のファイル
+  url      = "file:./dev.db"
 }
 
-// データベースに残すため
 model Link {
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   description String
   url String
-  // 認証用
   postedBy User? @relation(fields: [postedById], references: [id])
   postedById Int?
   votes Vote[]
@@ -33,9 +31,7 @@ model User {
 
 model Vote {
   id Int @id @default(autoincrement())
-  // fields: 外部キー, reference: 自分のid userに関しても同じ
   link Link @relation(fields: [linkId], references: [id])
-  // 外部キー
   linkId Int
   user User @relation(fields: [userId], references: [id])
   userId Int
