@@ -18,8 +18,8 @@ type Subscription {
 
 type Vote {
   id: ID!
-  link: Link! # 何に対して
-  user: User! # 誰が
+  link: Link!
+  user: User!
 }
 
 type Link {
